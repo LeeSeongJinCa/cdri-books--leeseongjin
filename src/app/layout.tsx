@@ -1,5 +1,6 @@
 import { QueryProvider } from "@/core/react-query/QueryProvider";
 import "@/core/styles/globals.css";
+import { PublicLayout } from "@/widgets/layout/ui/page-layout/PublicLayout";
 import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import type { ReactNode } from "react";
@@ -15,15 +16,21 @@ export const metadata: Metadata = {
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ["latin"],
-  weight: ["500", "700"],
+  weight: ["300", "500", "700"],
 });
 
 export default function Layout({ children }: Readonly<RootLayoutProps>) {
   return (
     <html lang="ko" className={notoSansKR.className}>
       <body>
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <PublicLayout>{children}</PublicLayout>
+        </QueryProvider>
       </body>
     </html>
   );
 }
+
+// TODO: a11y 추가하기
+// TODO: 반응형 디자인 추가하기
+// TODO: error handling 및 에러 메시지 추가하기

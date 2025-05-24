@@ -1,0 +1,161 @@
+"use client";
+
+import { cn } from "@/shared/lib/cn";
+import { Button } from "@/shared/ui/button/Button";
+import { Input } from "@/shared/ui/input/Input";
+import { Search as SearchIcon, X } from "lucide-react";
+import {
+  useCallback,
+  useState,
+  type ChangeEvent,
+  type KeyboardEvent,
+  type MouseEvent,
+} from "react";
+import type { SearchType } from "../../constants/SearchType";
+import { SEARCH_TYPES } from "../../constants/SearchType";
+
+export interface SearchBarProps {
+  value?: string;
+  placeholder?: string;
+  onChange?: (value: string, event: ChangeEvent<HTMLInputElement>) => void;
+  enableSearchOnEnter?: boolean;
+  onSearch?: (value: string, searchType: SearchType) => void;
+  onDelete?: (index: number) => void;
+  history?: string[];
+}
+
+export const SearchBar = ({
+  value,
+  placeholder = "검색어를 입력하세요",
+  onChange,
+  enableSearchOnEnter = true,
+  onSearch,
+  onDelete,
+  history,
+}: SearchBarProps) => {
+  const [searchValue, setSearchValue] = useState<string>(value ?? "");
+
+  const handleChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const currentValue = event.currentTarget.value;
+
+      setSearchValue(currentValue);
+      onChange?.(currentValue, event);
+    },
+    [onChange],
+  );
+
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLInputElement>) => {
+      if (event.key === "Enter" && enableSearchOnEnter) {
+        const currentValue = event.currentTarget.value;
+
+        onSearch?.(currentValue, SEARCH_TYPES.TITLE);
+      }
+    },
+    [enableSearchOnEnter, onSearch],
+  );
+
+  const handleDelete = useCallback(
+    (event: MouseEvent<HTMLButtonElement>, index: number) => {
+      event.stopPropagation();
+      onDelete?.(index);
+    },
+    [onDelete],
+  );
+
+  const handleHistoryItemClick = useCallback(
+    (keyword: string) => {
+      setSearchValue(keyword);
+      onSearch?.(keyword, SEARCH_TYPES.TITLE);
+    },
+    [onSearch],
+  );
+
+  return (
+    <div
+      className={cn(
+        "SearchBar-root",
+        "flex flex-col w-full items-start justify-center gap-4",
+      )}
+    >
+      <div
+        className={cn(
+          "SearchBar-inputContainer",
+          "group relative",
+          "flex flex-col flex-grow w-full",
+          history?.length && "rounded-3xl rounded-bl-none rounded-br-none",
+        )}
+      >
+        <label
+          htmlFor="main-search-input"
+          className={cn(
+            "SearchBar-label",
+            "relative flex flex-grow gap-2.5 p-2.5 bg-light-gray",
+            "border border-gray-300 rounded-3xl",
+            "group-focus-within:ring-0 group-focus-within:border-blue-500 group-focus-within:outline-none",
+            history &&
+              history.length > 0 &&
+              "group-focus-within:rounded-t-3xl group-focus-within:rounded-b-none group-focus-within:border-b-0 group-focus-within:border-b-transparent",
+          )}
+        >
+          <SearchIcon
+            className="h-[30px] w-[30px] text-text-secondary"
+            aria-hidden="true"
+          />
+          <Input
+            id="main-search-input"
+            type="text"
+            placeholder={placeholder}
+            autoComplete="off"
+            className={cn(
+              "SearchBar-input",
+              "w-full p-0 text-caption text-text-primary placeholder-text-subtitle bg-transparent border-0 outline-none shadow-none focus-within:ring-0",
+            )}
+            value={value ?? searchValue}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+          />
+        </label>
+        {history && history.length > 0 && (
+          <ul
+            className={cn(
+              "SearchBar-history-list",
+              "absolute top-full left-0 right-0 z-20",
+              "hidden p-2.5 border border-gray-300 border-t-0 rounded-b-3xl bg-light-gray shadow-lg",
+              "group-focus-within:flex group-focus-within:flex-col group-focus-within:gap-2 group-focus-within:border-l-blue-500 group-focus-within:border-r-blue-500 group-focus-within:border-b-blue-500 group-focus-within:border-t-transparent",
+            )}
+          >
+            {history.map((keyword, index) => (
+              <li
+                key={index}
+                className={cn(
+                  "SearchBar-history-item",
+                  "flex items-center justify-between text-text-subtitle",
+                )}
+              >
+                <button
+                  type="button"
+                  className={cn(
+                    "flex-grow flex items-center justify-between py-1.5 px-2.5 rounded text-left cursor-pointer",
+                    "hover:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500",
+                  )}
+                  onClick={() => handleHistoryItemClick(keyword)}
+                >
+                  <span className="text-text-primary">{keyword}</span>
+                </button>
+                <Button
+                  variant="ghost"
+                  className="h-6 w-6 p-0 text-text-subtitle hover:bg-gray-200 flex-shrink-0 ml-2"
+                  onClick={(event) => handleDelete(event, index)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+};
