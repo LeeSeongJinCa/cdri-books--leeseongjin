@@ -1,0 +1,5 @@
+@import "tailwindcss/preflight";
+@import "tailwindcss";
+
+@import "./typography.css";
+@import "./color.css";

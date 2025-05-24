@@ -1,0 +1,31 @@
+@utility text-title1 {
+  @apply text-[1.5rem] font-bold leading-[100%];
+}
+
+@utility text-title2 {
+  @apply text-[1.375rem] font-bold leading-[100%];
+}
+
+@utility text-title3 {
+  @apply text-[1.125rem] font-bold leading-[100%];
+}
+
+@utility text-body1 {
+  @apply text-[1.25rem] font-medium leading-[100%];
+}
+
+@utility text-body2 {
+  @apply text-[0.875rem] font-medium leading-[100%];
+}
+
+@utility text-body2-bold {
+  @apply text-[0.875rem] font-bold leading-[100%];
+}
+
+@utility text-caption {
+  @apply text-[1rem] font-medium leading-[100%];
+}
+
+@utility text-small {
+  @apply text-[0.625rem] font-medium leading-[100%];
+}
