@@ -44,6 +44,7 @@ export default [
       "react/prop-types": "off",
       ...prettierConfig.rules,
       "prettier/prettier": "warn",
+      "@typescript-eslint/consistent-type-imports": ["error"],
     },
     settings: {
       react: {
