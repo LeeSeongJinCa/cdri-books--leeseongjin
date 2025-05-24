@@ -10,7 +10,7 @@ import { SearchCountText } from "@/entities/search/ui/search-count-text/SearchCo
 import { SearchNoData } from "@/entities/search/ui/search-no-data/SearchNoData";
 import { SearchResultList } from "@/entities/search/ui/search-result-list/SearchResultList";
 import { cn } from "@/shared/lib/cn";
-import { PublicHeader } from "@/widgets/ui/page-header/PublicHeader";
+import { PublicHeader } from "@/widgets/layout/ui/page-header/PublicHeader";
 import { memo, useState } from "react";
 
 const books: BookApiResponseDocument[] = [
