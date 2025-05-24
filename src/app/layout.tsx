@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 const notoSansKR = Noto_Sans_KR({
   subsets: ["latin"],
-  weight: ["500", "700"],
+  weight: ["300", "500", "700"],
 });
 
 export default function Layout({ children }: Readonly<RootLayoutProps>) {
