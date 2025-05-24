@@ -7,6 +7,6 @@ export const PUBLIC_HEADER_ROUTES = [
   },
   {
     title: "내가 찜한 책",
-    href: ROUTES.LIKES,
+    href: ROUTES.WISHLIST,
   },
 ] as const;

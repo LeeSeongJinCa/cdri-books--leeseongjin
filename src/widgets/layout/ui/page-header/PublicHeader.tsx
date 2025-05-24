@@ -8,7 +8,10 @@ export type PublicHeaderProps = HTMLAttributes<HTMLElement>;
 
 export const PublicHeader = ({ className, ...props }: PublicHeaderProps) => {
   return (
-    <header className={cn("w-full h-[80px] bg-white", className)} {...props}>
+    <header
+      className={cn("PublicHeader-root", "w-full h-[80px] bg-white", className)}
+      {...props}
+    >
       <div className="flex items-center justify-between h-full mx-auto">
         <Link
           href={ROUTES.HOME}
