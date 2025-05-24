@@ -28,7 +28,7 @@ export const BookListItem = ({
   return (
     <div
       className={cn(
-        "flex flex-col items-center gap-4 w-full p-4 border-b border-[#D2D6DA]",
+        "flex flex-col items-center gap-4 w-full p-4 border-b border-light-gray-100",
         "md:flex-row md:gap-12 md:pl-12",
       )}
     >

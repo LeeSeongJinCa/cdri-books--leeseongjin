@@ -38,7 +38,7 @@ export const BookListItemDetail = ({
   return (
     <div
       className={cn(
-        "w-full p-4 border-b border-b-[#D2D6DA]",
+        "w-full p-4 border-b border-b-light-gray-100",
         "md:pt-6 md:pr-4 md:pb-10 md:pl-14",
       )}
     >

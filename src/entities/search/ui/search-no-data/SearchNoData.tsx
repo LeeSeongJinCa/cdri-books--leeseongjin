@@ -1,9 +1,19 @@
+import { cn } from "@/shared/lib/cn";
 import Image from "next/image";
+import type { HTMLAttributes } from "react";
 import emptySearchResult from "../../assets/icon_book.png";
 
-export const SearchNoData = () => {
+export type SearchNoDataProps = HTMLAttributes<HTMLDivElement>;
+
+export const SearchNoData = ({ className, ...props }: SearchNoDataProps) => {
   return (
-    <div className="flex flex-col items-center justify-center gap-6">
+    <div
+      className={cn(
+        "flex flex-col items-center justify-center gap-6",
+        className,
+      )}
+      {...props}
+    >
       <div className="w-[80px] h-[80px]">
         <Image
           src={emptySearchResult}
