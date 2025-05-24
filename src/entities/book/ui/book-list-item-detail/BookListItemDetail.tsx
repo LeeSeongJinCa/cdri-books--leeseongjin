@@ -4,11 +4,14 @@ import { cn } from "@/shared/lib/cn";
 import { Button } from "@/shared/ui/button/Button";
 import { LikeIcon } from "@/shared/ui/icons/LikeIcon.svg";
 import { LikeFillIcon } from "@/shared/ui/icons/LikeIconFill.svg";
+import { Link } from "@/shared/ui/link/Link";
 import { ChevronUp } from "lucide-react";
 import Image from "next/image";
+import type { MouseEventHandler } from "react";
 import { formatPrice } from "../../lib/format-price";
 
 interface BookListItemDetailProps {
+  url: string;
   cover: string;
   title: string;
   author: string;
@@ -17,22 +20,23 @@ interface BookListItemDetailProps {
   discountedPrice?: number; // 할인가
   isLiked?: boolean; // 찜 여부
   //
-  onPurchase?: () => void;
-  onCollapseDetail?: () => void;
-  onLike?: () => void;
+  onPurchase?: MouseEventHandler<HTMLButtonElement>;
+  onCollapseDetail?: MouseEventHandler<HTMLButtonElement>;
+  onLike?: MouseEventHandler<HTMLButtonElement>;
 }
 
 export const BookListItemDetail = ({
-  cover: cover,
+  url,
+  cover,
   title,
   author,
   description,
   originalPrice,
   discountedPrice,
-  isLiked = false,
-  //
   onPurchase,
   onCollapseDetail,
+  //
+  isLiked = false,
   onLike,
 }: BookListItemDetailProps) => {
   return (
@@ -52,12 +56,20 @@ export const BookListItemDetail = ({
             )}
           >
             <div className="relative w-full h-full">
-              <Image
-                src={cover}
-                alt={`${title} 책 표지`}
-                fill
-                className="rounded-md shadow-md object-cover"
-              />
+              <Link
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full h-full"
+              >
+                <Image
+                  src={cover}
+                  alt={`${title} 책 표지`}
+                  fill
+                  sizes="(max-width: 640px) 100vw, 200px"
+                  className="rounded-md shadow-md object-cover"
+                />
+              </Link>
               <Button
                 className={cn(
                   "absolute right-3 top-3 z-10 h-auto rounded-full bg-white/80 p-1.5 text-red-500 shadow-sm backdrop-blur-sm hover:bg-white",
@@ -130,9 +142,16 @@ export const BookListItemDetail = ({
               )}
             </div>
 
-            <Button className={cn("w-full")} onClick={onPurchase}>
-              구매하기
-            </Button>
+            <Link
+              href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block w-full"
+            >
+              <Button className={cn("w-full")} onClick={onPurchase}>
+                구매하기
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

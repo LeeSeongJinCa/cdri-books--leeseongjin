@@ -2,21 +2,25 @@
 
 import { cn } from "@/shared/lib/cn";
 import { Button } from "@/shared/ui/button/Button";
+import { Link } from "@/shared/ui/link/Link";
 import { ChevronDown } from "lucide-react";
 import Image from "next/image";
+import type { MouseEventHandler } from "react";
 import { formatPrice } from "../../lib/format-price";
 
 interface BookListItemProps {
+  url: string;
   cover: string;
   title: string;
   author: string;
   price: number;
   //
-  onPurchase?: () => void;
-  onExpandDetail?: () => void;
+  onPurchase?: MouseEventHandler<HTMLButtonElement>;
+  onExpandDetail?: MouseEventHandler<HTMLButtonElement>;
 }
 
 export const BookListItem = ({
+  url,
   cover,
   title,
   author,
@@ -40,13 +44,21 @@ export const BookListItem = ({
             "xs:w-[48px] xs:h-[68px]",
           )}
         >
-          <Image
-            src={cover}
-            alt={`${title} 책 표지`}
-            sizes="48px"
-            fill
-            className="rounded-md shadow-md object-cover"
-          />
+          <Link
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block w-full h-full"
+          >
+            {/* 이미지가 저화질인 이유는 Kakao API가 응답하는 thumbnail 이미지가 저화질이기 때문 */}
+            <Image
+              src={cover}
+              alt={`${title} 책 표지`}
+              fill
+              sizes="(max-width: 640px) 100vw, 100px"
+              className="rounded-md shadow-md object-cover"
+            />
+          </Link>
         </div>
 
         {/* 책 정보 영역 */}
@@ -68,13 +80,20 @@ export const BookListItem = ({
           "flex flex-shrink-0 flex-row items-center flex-wrap gap-2 ml-auto",
         )}
       >
-        <Button
-          variant="primary"
-          className="flex-1 flex-shrink-0"
-          onClick={onPurchase}
+        <Link
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block"
         >
-          구매하기
-        </Button>
+          <Button
+            variant="primary"
+            className="flex-1 flex-shrink-0"
+            onClick={onPurchase}
+          >
+            구매하기
+          </Button>
+        </Link>
         <Button
           variant="secondary"
           className="flex-1 flex-shrink-0"
