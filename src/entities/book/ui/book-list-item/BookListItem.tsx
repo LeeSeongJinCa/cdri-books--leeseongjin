@@ -4,9 +4,9 @@ import { cn } from "@/shared/lib/cn";
 import { Button } from "@/shared/ui/button/Button";
 import { Link } from "@/shared/ui/link/Link";
 import { ChevronDown } from "lucide-react";
-import Image from "next/image";
 import type { MouseEventHandler } from "react";
 import { formatPrice } from "../../lib/format-price";
+import { BookCover } from "../book-cover/BookCover";
 
 interface BookListItemProps {
   url: string;
@@ -50,9 +50,7 @@ export const BookListItem = ({
             rel="noopener noreferrer"
             className="block w-full h-full"
           >
-            {/* 이미지가 저화질인 이유는 Kakao API가 응답하는 thumbnail 이미지가 저화질이기 때문 */}
-            <Image
-              // TODO: onError 처리하기
+            <BookCover
               src={cover}
               alt={`${title} 책 표지`}
               fill
