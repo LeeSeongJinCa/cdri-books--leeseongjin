@@ -1,3 +1,4 @@
+import type { SearchType } from "@/entities/search/constants/SearchType";
 import type { ApiResponse, Datetime, Params } from "@/shared/types/common";
 
 export interface BookApiRequestQueryParams extends Params {
@@ -22,9 +23,10 @@ export interface BookApiRequestQueryParams extends Params {
   size?: number;
 
   /**
-   * 검색 필드 제한\n사용 가능한 값: title(제목), isbn (ISBN), publisher(출판사), person(인명)	X
+   * 검색 필드 제한
+   * 사용 가능한 값: title(제목), isbn (ISBN), publisher(출판사), person(인명)	X
    */
-  target?: string;
+  target?: SearchType;
 }
 
 export interface BookApiResponseMeta {

@@ -26,45 +26,66 @@ import type { SearchType } from "../../constants/SearchType";
 import { SEARCH_TYPES, SEARCH_TYPES_OPTIONS } from "../../constants/SearchType";
 
 export interface DetailSearchPopoverProps {
-  initialSearchType?: SearchType;
-  initialSearchValue?: string;
+  value?: string;
+  onChange?: (value: string) => void;
+
+  type?: SearchType;
+  onTypeChange?: (value: SearchType) => void;
+
+  enableSearchOnEnter?: boolean;
   onSearch?: (value: string, searchType: SearchType) => void;
   triggerButton?: ReactElement;
 }
 
 export const DetailSearchPopover = ({
+  value,
+  onChange,
+
+  type,
+  onTypeChange,
+  enableSearchOnEnter = true,
   onSearch,
-  initialSearchType = SEARCH_TYPES.TITLE,
-  initialSearchValue = "",
   triggerButton,
 }: DetailSearchPopoverProps) => {
-  const [searchType, setSearchType] = useState<SearchType>(initialSearchType);
-  const [searchValue, setSearchValue] = useState<string>(initialSearchValue);
+  const [searchValue, setSearchValue] = useState<string>(value ?? "");
+  const [searchType, setSearchType] = useState<SearchType>(
+    type ?? SEARCH_TYPES.TITLE,
+  );
 
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const handleSearch = useCallback(() => {
     onSearch?.(searchValue, searchType);
-    setSearchValue("");
     setIsPopoverOpen(false);
-  }, [searchValue, searchType, onSearch, setIsPopoverOpen]);
+  }, [searchValue, searchType, onSearch]);
 
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const currentValue = event.currentTarget.value;
 
       setSearchValue(currentValue);
+      onChange?.(currentValue);
     },
-    [setSearchValue],
+    [onChange],
   );
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLInputElement>) => {
-      if (event.key === "Enter") {
+      if (event.nativeEvent.isComposing) return;
+
+      if (event.key === "Enter" && enableSearchOnEnter) {
         handleSearch();
       }
     },
-    [handleSearch],
+    [enableSearchOnEnter, handleSearch],
+  );
+
+  const handleSelectType = useCallback(
+    (value: SearchType) => {
+      setSearchType(value);
+      onTypeChange?.(value);
+    },
+    [onTypeChange],
   );
 
   const defaultTrigger = (
@@ -87,8 +108,8 @@ export const DetailSearchPopover = ({
           <div className="flex gap-2 items-center">
             <div className="flex-[0.5_1_0%]">
               <Select
-                value={searchType}
-                onValueChange={(value) => setSearchType(value as SearchType)}
+                value={type ?? searchType}
+                onValueChange={handleSelectType}
               >
                 <SelectTrigger className="w-full h-10 border border-gray-300 rounded-md shadow-none cursor-pointer bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                   <SelectValue placeholder="유형 선택" />
@@ -116,7 +137,7 @@ export const DetailSearchPopover = ({
                   "focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-text-primary placeholder-text-subtitle",
                 )}
                 placeholder="검색어 입력"
-                value={searchValue}
+                value={value ?? searchValue}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}
               />

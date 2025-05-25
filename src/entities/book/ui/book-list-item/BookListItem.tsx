@@ -52,6 +52,7 @@ export const BookListItem = ({
           >
             {/* 이미지가 저화질인 이유는 Kakao API가 응답하는 thumbnail 이미지가 저화질이기 때문 */}
             <Image
+              // TODO: onError 처리하기
               src={cover}
               alt={`${title} 책 표지`}
               fill
@@ -62,13 +63,18 @@ export const BookListItem = ({
         </div>
 
         {/* 책 정보 영역 */}
-        <div className="flex flex-1 items-center justify-between flex-wrap gap-1 self-stretch">
+        <div
+          className={cn(
+            "flex flex-1 items-center justify-between flex-wrap gap-1 self-stretch",
+            "xs:flex-nowrap",
+          )}
+        >
           <div className="flex items-center flex-wrap gap-4">
             <h3 className="text-title3 text-text-primary">{title}</h3>
             <p className="text-body2 text-text-secondary">{author}</p>
           </div>
 
-          <p className="text-title3 text-text-primary">
+          <p className="flex-shrink-0 text-title3 text-text-primary">
             {formatPrice(price)}원
           </p>
         </div>

@@ -63,6 +63,7 @@ export const BookListItemDetail = ({
                 className="block w-full h-full"
               >
                 <Image
+                  // TODO: onError 처리하기
                   src={cover}
                   alt={`${title} 책 표지`}
                   fill
