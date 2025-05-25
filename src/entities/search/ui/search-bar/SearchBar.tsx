@@ -47,10 +47,19 @@ export const SearchBar = ({
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLInputElement>) => {
+      /**
+       * 한글 입력 시, KeyDown 이벤트 중복 발생 현상이 있음
+       * isComposing 속성을 통해 한글 입력 시 중복 이벤트 방지
+       *
+       * @see https://velog.io/@dosomething/React-%ED%95%9C%EA%B8%80-%EC%9E%85%EB%A0%A5%EC%8B%9C-keydown-%EC%9D%B4%EB%B2%A4%ED%8A%B8-%EC%A4%91%EB%B3%B5-%EB%B0%9C%EC%83%9D-%ED%98%84%EC%83%81
+       */
+      if (event.nativeEvent.isComposing) return;
+
       if (event.key === "Enter" && enableSearchOnEnter) {
         const currentValue = event.currentTarget.value;
 
         onSearch?.(currentValue, SEARCH_TYPES.TITLE);
+        event.preventDefault();
       }
     },
     [enableSearchOnEnter, onSearch],
@@ -84,7 +93,9 @@ export const SearchBar = ({
           "SearchBar-inputContainer",
           "group relative",
           "flex flex-col flex-grow w-full",
-          history?.length && "rounded-3xl rounded-bl-none rounded-br-none",
+          history &&
+            history.length &&
+            "rounded-3xl rounded-bl-none rounded-br-none",
         )}
       >
         <label
@@ -128,7 +139,7 @@ export const SearchBar = ({
           >
             {history.map((keyword, index) => (
               <li
-                key={index}
+                key={`${keyword}-${index}`}
                 className={cn(
                   "SearchBar-history-item",
                   "flex items-center justify-between text-text-subtitle",
