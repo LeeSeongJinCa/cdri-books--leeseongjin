@@ -20,7 +20,7 @@ export interface SearchBarProps {
   onChange?: (value: string, event: ChangeEvent<HTMLInputElement>) => void;
   enableSearchOnEnter?: boolean;
   onSearch?: (value: string, searchType: SearchType) => void;
-  onDelete?: (index: number) => void;
+  onDelete?: (value: string) => void;
   history?: string[];
 }
 
@@ -66,9 +66,10 @@ export const SearchBar = ({
   );
 
   const handleDelete = useCallback(
-    (event: MouseEvent<HTMLButtonElement>, index: number) => {
+    (event: MouseEvent<HTMLButtonElement>) => {
+      const currentValue = event.currentTarget.value;
+      onDelete?.(currentValue);
       event.stopPropagation();
-      onDelete?.(index);
     },
     [onDelete],
   );
@@ -157,8 +158,8 @@ export const SearchBar = ({
                 </button>
                 <Button
                   variant="ghost"
-                  className="h-6 w-6 p-0 text-text-subtitle hover:bg-gray-200 flex-shrink-0 ml-2"
-                  onClick={(event) => handleDelete(event, index)}
+                  className="h-6 w-6 p-0 text-black hover:bg-gray-200 flex-shrink-0 ml-2"
+                  onClick={handleDelete}
                 >
                   <X className="h-4 w-4" />
                 </Button>

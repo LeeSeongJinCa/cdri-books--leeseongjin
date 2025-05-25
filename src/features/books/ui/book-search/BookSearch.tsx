@@ -10,17 +10,19 @@ import { SearchBar } from "@/entities/search/ui/search-bar/SearchBar";
 import { ROUTES } from "@/shared/config/routes";
 import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
+import { useSearchHistory } from "../../hooks/useSearchHistory";
 
 export const BookSearch = () => {
   const router = useRouter();
   const { searchValue, searchType } = useBookSearchParams();
 
   const [inputValue, setInputValue] = useState<string>(searchValue);
+
   const [detailInputValue, setDetailInputValue] = useState<string>("");
   const [detailInputType, setDetailInputType] =
     useState<SearchType>(searchType);
 
-  const [history, setHistory] = useState<string[]>([]);
+  const { history, addHistory, deleteHistory } = useSearchHistory();
 
   const handleSearch = useCallback(
     (keyword: string) => {
@@ -32,16 +34,13 @@ export const BookSearch = () => {
       setDetailInputValue("");
       setDetailInputType(SEARCH_TYPES.TITLE);
 
-      setHistory((prev) => {
-        const newHistory = [keyword, ...prev];
-        return newHistory.slice(0, 5);
-      });
+      addHistory(keyword);
 
       router.push(
         `${ROUTES.HOME}?query=${keyword}&target=${SEARCH_TYPES.TITLE}`,
       );
     },
-    [router],
+    [router, addHistory],
   );
 
   const handleDetailSearch = useCallback(
@@ -53,23 +52,19 @@ export const BookSearch = () => {
       // 전체 검색과 상세 검색은 동시에 진행 불가
       setInputValue("");
 
-      setHistory((prev) => {
-        const newHistory = [keyword, ...prev];
-        return newHistory.slice(0, 5);
-      });
+      addHistory(keyword);
 
       router.push(`${ROUTES.HOME}?query=${keyword}&target=${type}`);
     },
-    [router],
+    [router, addHistory],
   );
 
-  const handleDelete = useCallback((index: number) => {
-    setHistory((prev) => {
-      const newHistory = [...prev];
-      newHistory.splice(index, 1);
-      return newHistory;
-    });
-  }, []);
+  const handleDelete = useCallback(
+    (keyword: string) => {
+      deleteHistory(keyword);
+    },
+    [deleteHistory],
+  );
 
   return (
     <>
