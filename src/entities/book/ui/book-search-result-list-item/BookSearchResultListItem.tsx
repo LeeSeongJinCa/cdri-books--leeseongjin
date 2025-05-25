@@ -3,15 +3,22 @@
 import type { BookApiResponseDocument } from "@/entities/book/model/type";
 import { BookListItemDetail } from "@/entities/book/ui/book-list-item-detail/BookListItemDetail";
 import { BookListItem } from "@/entities/book/ui/book-list-item/BookListItem";
-import { memo, useState } from "react";
+import { memo, useCallback, useState } from "react";
+
+export interface BookSearchResultListItemProps {
+  document: BookApiResponseDocument;
+  isLiked?: boolean;
+  onLike?: () => void;
+}
 
 export const BookSearchResultListItem = memo(
-  ({ document }: { document: BookApiResponseDocument }) => {
+  ({ document, isLiked = false, onLike }: BookSearchResultListItemProps) => {
     const [isExpanded, setIsExpanded] = useState(false);
 
-    const toggleExpanded = () => {
-      setIsExpanded((prev) => !prev);
-    };
+    const toggleExpanded = useCallback(
+      () => setIsExpanded((prev) => !prev),
+      [],
+    );
 
     const renderItem = isExpanded ? (
       <BookListItemDetail
@@ -22,8 +29,10 @@ export const BookSearchResultListItem = memo(
         description={document.contents}
         originalPrice={document.price}
         discountedPrice={document.sale_price}
-        isLiked={false}
         onCollapseDetail={toggleExpanded}
+        //
+        isLiked={isLiked}
+        onLike={onLike}
       />
     ) : (
       <BookListItem

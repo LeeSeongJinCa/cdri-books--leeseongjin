@@ -1,8 +1,7 @@
+import { BookSearchCount } from "@/features/books/ui/book-search-count/BookSearchCount";
+import { BookSearchResults } from "@/features/books/ui/book-search-results/BookSearchResults";
+import { BookSearch } from "@/features/books/ui/book-search/BookSearch";
 import { cn } from "@/shared/lib/cn";
-
-import { BookSearchCount } from "@/features/search-books/ui/book-search-count/BookSearchCount";
-import { BookSearchResults } from "@/features/search-books/ui/book-search-results/BookSearchResults";
-import { BookSearch } from "@/features/search-books/ui/book-search/BookSearch";
 
 export default function Page() {
   return (

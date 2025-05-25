@@ -73,7 +73,7 @@ export const BookListItemDetail = ({
               </Link>
               <Button
                 className={cn(
-                  "absolute right-3 top-3 z-10 h-auto rounded-full bg-white/80 p-1.5 text-red-500 shadow-sm backdrop-blur-sm hover:bg-white",
+                  "absolute right-3 top-3 z-10 h-auto rounded-full bg-white p-1.5 shadow-sm backdrop-blur-sm hover:bg-white",
                   "w-auto",
                 )}
                 // aria-label={isLiked ? "좋아요 취소" : "좋아요"}

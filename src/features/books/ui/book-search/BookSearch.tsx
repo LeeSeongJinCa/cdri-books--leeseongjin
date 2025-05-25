@@ -24,8 +24,6 @@ export const BookSearch = () => {
 
   const handleSearch = useCallback(
     (keyword: string) => {
-      console.log("onSearch:", [keyword]);
-
       if (keyword.trim() === "") {
         return;
       }
@@ -48,8 +46,6 @@ export const BookSearch = () => {
 
   const handleDetailSearch = useCallback(
     (keyword: string, type: SearchType) => {
-      console.log("onDetailSearch:", [keyword, type]);
-
       if (keyword.trim() === "") {
         return;
       }
@@ -68,8 +64,6 @@ export const BookSearch = () => {
   );
 
   const handleDelete = useCallback((index: number) => {
-    console.log("onDelete:", index);
-
     setHistory((prev) => {
       const newHistory = [...prev];
       newHistory.splice(index, 1);
