@@ -121,7 +121,7 @@ export const DetailSearchPopover = ({
                       value={value}
                       className={cn(
                         "cursor-pointer p-2 hover:bg-light-gray text-text-primary",
-                        searchType === value && "bg-light-gray font-semibold",
+                        searchType === value && "hidden",
                       )}
                     >
                       {label}
