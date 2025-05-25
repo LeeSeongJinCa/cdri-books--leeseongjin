@@ -152,6 +152,7 @@ export const SearchBar = ({
                     "flex-grow flex items-center justify-between py-1.5 px-2.5 rounded text-left cursor-pointer",
                     "hover:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500",
                   )}
+                  aria-label={`최근 검색어 ${keyword}를 다시 검색`}
                   onClick={() => handleHistoryItemClick(keyword)}
                 >
                   <span className="text-text-primary">{keyword}</span>
@@ -160,8 +161,9 @@ export const SearchBar = ({
                   variant="ghost"
                   className="h-6 w-6 p-0 text-black hover:bg-gray-200 flex-shrink-0 ml-2"
                   onClick={handleDelete}
+                  aria-label={`최근 검색어 ${keyword} 삭제`}
                 >
-                  <X className="h-4 w-4" />
+                  <X className="h-4 w-4" aria-hidden="true" />
                 </Button>
               </li>
             ))}

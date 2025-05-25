@@ -110,6 +110,7 @@ export const DetailSearchPopover = ({
               <Select
                 value={type ?? searchType}
                 onValueChange={handleSelectType}
+                aria-label="검색 유형 선택"
               >
                 <SelectTrigger className="w-full h-10 border border-gray-300 rounded-md shadow-none cursor-pointer bg-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                   <SelectValue placeholder="유형 선택" />
@@ -137,6 +138,7 @@ export const DetailSearchPopover = ({
                   "focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-text-primary placeholder-text-subtitle",
                 )}
                 placeholder="검색어 입력"
+                aria-label="상세 검색어 입력"
                 value={value ?? searchValue}
                 onChange={handleChange}
                 onKeyDown={handleKeyDown}

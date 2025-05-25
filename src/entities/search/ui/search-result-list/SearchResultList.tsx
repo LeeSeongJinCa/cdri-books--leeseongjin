@@ -26,7 +26,11 @@ export const SearchResultList = <T extends ApiResponseDocument>({
 }: SearchResultListProps<T>) => {
   return (
     <>
-      <ul className={cn("SearchResultList", "flex flex-col")}>
+      <ul
+        className={cn("SearchResultList", "flex flex-col")}
+        aria-live="polite"
+        aria-relevant="additions text"
+      >
         {documents.map((document) => (
           <li
             key={keySelector(document)}
@@ -46,6 +50,7 @@ export const SearchResultList = <T extends ApiResponseDocument>({
           )}
           isLoading={isFetchingMore}
           onClick={onMore}
+          aria-busy={isFetchingMore}
         >
           더보기
         </Button>

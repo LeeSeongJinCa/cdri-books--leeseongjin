@@ -42,25 +42,31 @@ export const BookSearchResults = () => {
     return <SearchNoData className="w-full h-[400px]" />;
   }
 
-  return (
-    <SearchResultList
-      keySelector={(document) => document.isbn}
-      documents={books}
-      renderItem={(document) => {
-        const isLiked = wishlist.some((b) => b.isbn === document.isbn);
+  // 검색어 제목 생성, 없으면 기본 제목
+  const headingText = searchValue ? `"${searchValue}" 검색 결과` : "검색 결과";
 
-        return (
-          <BookSearchResultListItem
-            document={document}
-            isLiked={isLiked}
-            onLike={() => handleLike(document)}
-          />
-        );
-      }}
-      enableMore
-      isFetchingMore={query.isFetchingNextPage}
-      hasMore={query.hasNextPage}
-      onMore={query.fetchNextPage}
-    />
+  return (
+    <>
+      <h2 className="text-title3 text-text-primary mb-4">{headingText}</h2>
+      <SearchResultList
+        keySelector={(document) => document.isbn}
+        documents={books}
+        renderItem={(document) => {
+          const isLiked = wishlist.some((b) => b.isbn === document.isbn);
+
+          return (
+            <BookSearchResultListItem
+              document={document}
+              isLiked={isLiked}
+              onLike={() => handleLike(document)}
+            />
+          );
+        }}
+        enableMore
+        isFetchingMore={query.isFetchingNextPage}
+        hasMore={query.hasNextPage}
+        onMore={query.fetchNextPage}
+      />
+    </>
   );
 };

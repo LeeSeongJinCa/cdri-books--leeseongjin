@@ -40,31 +40,34 @@ export const WishlistSearchResults = () => {
     setPage((prev) => prev + 1);
   }, [hasMore]);
 
+  const isEmpty = books.length === 0;
+
+  if (isEmpty) {
+    return <SearchNoData className="w-full h-[400px]" />;
+  }
+
   return (
     <>
-      {books.length > 0 ? (
-        <SearchResultList
-          keySelector={(document) => document.isbn}
-          documents={books}
-          renderItem={(document) => {
-            const isLiked = books.some((b) => b.isbn === document.isbn);
+      <h2 className="text-title3 text-text-primary mb-4">찜한 도서 목록</h2>
+      <SearchResultList
+        keySelector={(document) => document.isbn}
+        documents={books}
+        renderItem={(document) => {
+          const isLiked = books.some((b) => b.isbn === document.isbn);
 
-            return (
-              <BookSearchResultListItem
-                document={document}
-                isLiked={isLiked}
-                onLike={() => handleLike(document)}
-              />
-            );
-          }}
-          enableMore
-          isFetchingMore={false}
-          hasMore={hasMore}
-          onMore={handleMore}
-        />
-      ) : (
-        <SearchNoData className="w-full h-[400px]" />
-      )}
+          return (
+            <BookSearchResultListItem
+              document={document}
+              isLiked={isLiked}
+              onLike={() => handleLike(document)}
+            />
+          );
+        }}
+        enableMore
+        isFetchingMore={false}
+        hasMore={hasMore}
+        onMore={handleMore}
+      />
     </>
   );
 };

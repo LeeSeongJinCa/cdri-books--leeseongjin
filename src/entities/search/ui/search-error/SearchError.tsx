@@ -15,7 +15,7 @@ export const SearchError = ({ className, ...props }: SearchErrorProps) => {
       {...props}
     >
       <div className="w-[80px] h-[80px]">
-        <CloudAlert className="w-full h-full text-red" />
+        <CloudAlert className="w-full h-full text-red" aria-hidden="true" />
       </div>
 
       <div className="text-center text-caption text-text-secondary">

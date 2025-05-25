@@ -34,9 +34,14 @@ export const Button = ({
         variants[variant],
         className,
       )}
+      aria-busy={isLoading}
       {...props}
     >
-      {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : children}
+      {isLoading ? (
+        <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+      ) : (
+        children
+      )}
     </button>
   );
 };

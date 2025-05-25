@@ -22,7 +22,7 @@ export const Link = ({
 
   return (
     <NextLink
-      // aria-current={isActive ? "page" : undefined}
+      aria-current={isActive ? "page" : undefined}
       className={cn(
         "relative body-1 text-text-primary border-b border-b-transparent transition-colors",
         isActive && "border-b-primary",

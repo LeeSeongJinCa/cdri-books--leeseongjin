@@ -4,11 +4,12 @@ import { cn } from "@/shared/lib/cn";
 import { Button } from "@/shared/ui/button/Button";
 import { Link } from "@/shared/ui/link/Link";
 import { ChevronDown } from "lucide-react";
-import type { MouseEventHandler } from "react";
+import type { ButtonHTMLAttributes, MouseEventHandler } from "react";
 import { formatPrice } from "../../lib/format-price";
 import { BookCover } from "../book-cover/BookCover";
 
 interface BookListItemProps {
+  id: string;
   url: string;
   cover: string;
   title: string;
@@ -17,9 +18,14 @@ interface BookListItemProps {
   //
   onPurchase?: MouseEventHandler<HTMLButtonElement>;
   onExpandDetail?: MouseEventHandler<HTMLButtonElement>;
+  //
+  slotProps?: {
+    detailButton?: ButtonHTMLAttributes<HTMLButtonElement>;
+  };
 }
 
 export const BookListItem = ({
+  id,
   url,
   cover,
   title,
@@ -28,9 +34,12 @@ export const BookListItem = ({
   //
   onPurchase,
   onExpandDetail,
+  //
+  slotProps,
 }: BookListItemProps) => {
   return (
     <div
+      id={id}
       className={cn(
         "flex flex-col items-center gap-4 w-full p-4 border-b border-light-gray-100",
         "md:flex-row md:gap-12 md:pl-12",
@@ -102,9 +111,10 @@ export const BookListItem = ({
           variant="secondary"
           className="flex-1 flex-shrink-0"
           onClick={onExpandDetail}
+          {...slotProps?.detailButton}
         >
           상세보기
-          <ChevronDown className="h-4 w-4" />
+          <ChevronDown className="h-4 w-4" aria-hidden="true" />
         </Button>
       </div>
     </div>

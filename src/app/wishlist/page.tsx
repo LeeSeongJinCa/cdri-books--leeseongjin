@@ -13,7 +13,9 @@ export default function Page() {
   return (
     <>
       <section className={cn("flex flex-col gap-4 mb-12")}>
-        <p className="text-title2 text-text-primary text-left">내가 찜한 책</p>
+        <h1 className="text-title2 text-text-primary text-left">
+          내가 찜한 책
+        </h1>
 
         <WishlistSearchCount />
       </section>
