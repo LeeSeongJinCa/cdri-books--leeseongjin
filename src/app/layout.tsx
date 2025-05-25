@@ -32,8 +32,6 @@ export default function Layout({ children }: Readonly<RootLayoutProps>) {
 }
 
 // TODO: a11y 추가하기
-// TODO: 반응형 디자인 추가하기
-// TODO: error handling 및 에러 메시지 추가하기
 // TODO: Next.js Meta 추가하기
 // TODO: SEO 개선하기
 // TODO: 페이지 성능 개선하기

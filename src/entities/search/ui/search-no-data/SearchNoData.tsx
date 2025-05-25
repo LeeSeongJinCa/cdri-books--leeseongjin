@@ -9,6 +9,7 @@ export const SearchNoData = ({ className, ...props }: SearchNoDataProps) => {
   return (
     <div
       className={cn(
+        "SearchNoData-root",
         "flex flex-col items-center justify-center gap-6",
         className,
       )}
