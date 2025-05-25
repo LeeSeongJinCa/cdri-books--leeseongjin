@@ -13,8 +13,11 @@ export const SearchResultList = <T extends ApiResponseDocument>({
 }: SearchResultListProps<T>) => {
   return (
     <ul className={cn("SearchResultList", "flex flex-col")}>
-      {documents.map((document) => (
-        <li key={document.title} className="SearchResultList-item w-full">
+      {documents.map((document, index) => (
+        <li
+          key={`${document.title}-${index}`}
+          className="SearchResultList-item w-full"
+        >
           {renderItem(document)}
         </li>
       ))}

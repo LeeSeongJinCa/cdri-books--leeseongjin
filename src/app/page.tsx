@@ -1,5 +1,6 @@
 "use client";
 
+import { useBooks } from "@/entities/book/hooks/useBooks";
 import type { SearchType } from "@/entities/search/constants/SearchType";
 import { DetailSearchPopover } from "@/entities/search/ui/detail-search-popover/DetailSearchPopover";
 import { SearchBar } from "@/entities/search/ui/search-bar/SearchBar";
@@ -9,11 +10,13 @@ import { SearchResultList } from "@/entities/search/ui/search-result-list/Search
 import { cn } from "@/shared/lib/cn";
 import { BookSearchResultListItem } from "@/widgets/book/ui/book-search-result-list-item/BookSearchResultListItem";
 import { useState } from "react";
-import { books } from "./__mock__/books";
 
 export default function Page() {
+  const [value, setValue] = useState<string>("");
   const [searchValue, setSearchValue] = useState<string>("");
   const [history, setHistory] = useState<string[]>([]);
+
+  const { books } = useBooks(searchValue);
 
   const handleSearch = (keyword: string, type: SearchType) => {
     console.log("onSearch:", [keyword, type]);
@@ -22,6 +25,7 @@ export default function Page() {
       return;
     }
 
+    setValue(keyword);
     setSearchValue(keyword);
     setHistory((prev) => {
       const newHistory = [keyword, ...prev];
@@ -47,8 +51,8 @@ export default function Page() {
         <div className="flex items-center gap-4 w-full max-w-[480px]">
           <SearchBar
             history={history}
-            value={searchValue}
-            onChange={setSearchValue}
+            value={value}
+            onChange={setValue}
             onSearch={handleSearch}
             onDelete={handleDelete}
           />
@@ -56,7 +60,7 @@ export default function Page() {
           <DetailSearchPopover onSearch={handleSearch} />
         </div>
 
-        <SearchCountText title="도서 검색 결과" count={0} />
+        <SearchCountText title="도서 검색 결과" count={books.length} />
       </section>
 
       <section>
