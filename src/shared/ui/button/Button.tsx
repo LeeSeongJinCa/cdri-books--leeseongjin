@@ -1,6 +1,7 @@
 import { cn } from "@/shared/lib/cn";
 import type { ClassValue } from "clsx";
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { Loader2 } from "lucide-react";
+import type { ButtonHTMLAttributes } from "react";
 
 const variants: Record<string, ClassValue> = {
   primary: cn("bg-primary text-white hover:bg-primary/90 focus:ring-primary"),
@@ -14,13 +15,14 @@ const variants: Record<string, ClassValue> = {
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: keyof typeof variants;
-  children?: ReactNode;
+  isLoading?: boolean;
 }
 
 export const Button = ({
+  variant = "primary",
+  isLoading = false,
   className,
   children,
-  variant = "primary",
   ...props
 }: ButtonProps) => {
   return (
@@ -34,7 +36,7 @@ export const Button = ({
       )}
       {...props}
     >
-      {children}
+      {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : children}
     </button>
   );
 };

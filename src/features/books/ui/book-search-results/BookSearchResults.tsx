@@ -13,7 +13,7 @@ import { useCallback } from "react";
 export const BookSearchResults = () => {
   const { searchValue, searchType } = useBookSearchParams();
 
-  const { books } = useBooks(searchValue, searchType);
+  const { query, books } = useBooks(searchValue, searchType);
 
   const { wishlist, addToWishlist, removeFromWishlist } = useWishlistStore();
 
@@ -34,6 +34,7 @@ export const BookSearchResults = () => {
     <>
       {books.length > 0 ? (
         <SearchResultList
+          keySelector={(document) => document.isbn}
           documents={books}
           renderItem={(document) => {
             const isLiked = wishlist.some((b) => b.isbn === document.isbn);
@@ -46,6 +47,10 @@ export const BookSearchResults = () => {
               />
             );
           }}
+          enableMore
+          isFetchingMore={query.isFetchingNextPage}
+          hasMore={query.hasNextPage}
+          onMore={query.fetchNextPage}
         />
       ) : (
         <SearchNoData className="w-full h-[400px]" />

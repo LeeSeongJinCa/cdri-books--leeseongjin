@@ -6,7 +6,9 @@ import { SearchResultList } from "@/entities/search/ui/search-result-list/Search
 
 import type { BookApiResponseDocument } from "@/entities/book/model/type";
 import { useWishlistStore } from "@/entities/wishlist/store/wishlistStore";
-import { useCallback } from "react";
+import { useCallback, useMemo, useState } from "react";
+
+const SIZE = 10;
 
 export const WishlistSearchResults = () => {
   const { wishlist, addToWishlist, removeFromWishlist } = useWishlistStore();
@@ -24,13 +26,28 @@ export const WishlistSearchResults = () => {
     [wishlist, addToWishlist, removeFromWishlist],
   );
 
+  const [page, setPage] = useState<number>(1);
+  const books = useMemo(() => wishlist.slice(0, page * SIZE), [wishlist, page]);
+
+  const hasMore = useMemo(
+    () => wishlist.length > page * SIZE,
+    [wishlist, page],
+  );
+
+  const handleMore = useCallback(() => {
+    if (!hasMore) return;
+
+    setPage((prev) => prev + 1);
+  }, [hasMore]);
+
   return (
     <>
-      {wishlist.length > 0 ? (
+      {books.length > 0 ? (
         <SearchResultList
-          documents={wishlist}
+          keySelector={(document) => document.isbn}
+          documents={books}
           renderItem={(document) => {
-            const isLiked = wishlist.some((b) => b.isbn === document.isbn);
+            const isLiked = books.some((b) => b.isbn === document.isbn);
 
             return (
               <BookSearchResultListItem
@@ -40,6 +57,10 @@ export const WishlistSearchResults = () => {
               />
             );
           }}
+          enableMore
+          isFetchingMore={false}
+          hasMore={hasMore}
+          onMore={handleMore}
         />
       ) : (
         <SearchNoData className="w-full h-[400px]" />
