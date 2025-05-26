@@ -6,5 +6,7 @@ import { useWishlistStore } from "@/entities/wishlist/store/wishlistStore";
 export const WishlistSearchCount = () => {
   const wishlist = useWishlistStore((state) => state.wishlist);
 
-  return <SearchCountText title="찜한 책" count={wishlist.length} />;
+  const totalCount = wishlist.length;
+
+  return <SearchCountText title="찜한 책" count={totalCount} />;
 };

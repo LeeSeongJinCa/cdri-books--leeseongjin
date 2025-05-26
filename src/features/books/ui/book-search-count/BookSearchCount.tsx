@@ -8,7 +8,9 @@ import { useBookSearchParams } from "@/entities/book/hooks/useBookSearchParams";
 export const BookSearchCount = () => {
   const { searchValue, searchType } = useBookSearchParams();
 
-  const { books } = useBooks(searchValue, searchType);
+  const { query } = useBooks(searchValue, searchType);
 
-  return <SearchCountText title="도서 검색 결과" count={books.length} />;
+  const totalCount = query.data?.pages[0]?.data.meta.total_count ?? 0;
+
+  return <SearchCountText title="도서 검색 결과" count={totalCount} />;
 };
