@@ -11,27 +11,31 @@ import {
   type KeyboardEvent,
   type MouseEvent,
 } from "react";
-import type { SearchType } from "../../constants/SearchType";
-import { SEARCH_TYPES } from "../../constants/SearchType";
 
 export interface SearchBarProps {
   value?: string;
   placeholder?: string;
   onChange?: (value: string, event: ChangeEvent<HTMLInputElement>) => void;
+
   enableSearchOnEnter?: boolean;
-  onSearch?: (value: string, searchType: SearchType) => void;
-  onDelete?: (value: string) => void;
+  onEnter?: (value: string) => void;
+
   history?: string[];
+  onHistoryClick?: (value: string) => void;
+  onDelete?: (value: string) => void;
 }
 
 export const SearchBar = ({
   value,
   placeholder = "검색어를 입력하세요",
   onChange,
+
   enableSearchOnEnter = true,
-  onSearch,
-  onDelete,
+  onEnter,
+
   history,
+  onHistoryClick,
+  onDelete,
 }: SearchBarProps) => {
   const [searchValue, setSearchValue] = useState<string>(value ?? "");
 
@@ -58,11 +62,10 @@ export const SearchBar = ({
       if (event.key === "Enter" && enableSearchOnEnter) {
         const currentValue = event.currentTarget.value;
 
-        onSearch?.(currentValue, SEARCH_TYPES.TITLE);
-        event.preventDefault();
+        onEnter?.(currentValue);
       }
     },
-    [enableSearchOnEnter, onSearch],
+    [enableSearchOnEnter, onEnter],
   );
 
   const handleDelete = useCallback(
@@ -77,9 +80,9 @@ export const SearchBar = ({
   const handleHistoryItemClick = useCallback(
     (keyword: string) => {
       setSearchValue(keyword);
-      onSearch?.(keyword, SEARCH_TYPES.TITLE);
+      onHistoryClick?.(keyword);
     },
-    [onSearch],
+    [onHistoryClick],
   );
 
   return (
@@ -159,6 +162,7 @@ export const SearchBar = ({
                 </button>
                 <Button
                   variant="ghost"
+                  value={keyword}
                   className="h-6 w-6 p-0 text-black hover:bg-gray-200 flex-shrink-0 ml-2"
                   onClick={handleDelete}
                   aria-label={`최근 검색어 ${keyword} 삭제`}

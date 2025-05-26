@@ -31,6 +31,3 @@ export default function Layout({ children }: Readonly<LayoutProps>) {
     </html>
   );
 }
-
-// TODO: SEO 개선하기
-// TODO: 페이지 성능 개선하기
