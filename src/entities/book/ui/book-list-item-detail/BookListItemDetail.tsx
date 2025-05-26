@@ -6,11 +6,12 @@ import { LikeIcon } from "@/shared/ui/icons/LikeIcon.svg";
 import { LikeFillIcon } from "@/shared/ui/icons/LikeIconFill.svg";
 import { Link } from "@/shared/ui/link/Link";
 import { ChevronUp } from "lucide-react";
-import Image from "next/image";
-import type { MouseEventHandler } from "react";
+import type { ButtonHTMLAttributes, MouseEventHandler } from "react";
 import { formatPrice } from "../../lib/format-price";
+import { BookCover } from "../book-cover/BookCover";
 
 interface BookListItemDetailProps {
+  id: string;
   url: string;
   cover: string;
   title: string;
@@ -23,9 +24,14 @@ interface BookListItemDetailProps {
   onPurchase?: MouseEventHandler<HTMLButtonElement>;
   onCollapseDetail?: MouseEventHandler<HTMLButtonElement>;
   onLike?: MouseEventHandler<HTMLButtonElement>;
+  //
+  slotProps?: {
+    detailButton?: ButtonHTMLAttributes<HTMLButtonElement>;
+  };
 }
 
 export const BookListItemDetail = ({
+  id,
   url,
   cover,
   title,
@@ -38,9 +44,12 @@ export const BookListItemDetail = ({
   //
   isLiked = false,
   onLike,
+  //
+  slotProps,
 }: BookListItemDetailProps) => {
   return (
     <div
+      id={id}
       className={cn(
         "w-full p-4 border-b border-b-light-gray-100",
         "md:pt-6 md:pr-4 md:pb-10 md:pl-14",
@@ -62,8 +71,7 @@ export const BookListItemDetail = ({
                 rel="noopener noreferrer"
                 className="block w-full h-full"
               >
-                <Image
-                  // TODO: onError 처리하기
+                <BookCover
                   src={cover}
                   alt={`${title} 책 표지`}
                   fill
@@ -76,13 +84,14 @@ export const BookListItemDetail = ({
                   "absolute right-3 top-3 z-10 h-auto rounded-full bg-white p-1.5 shadow-sm backdrop-blur-sm hover:bg-white",
                   "w-auto",
                 )}
-                // aria-label={isLiked ? "좋아요 취소" : "좋아요"}
+                aria-label={isLiked ? "좋아요 취소" : "좋아요"}
+                aria-pressed={isLiked}
                 onClick={onLike}
               >
                 {isLiked ? (
-                  <LikeFillIcon className={`h-6 w-6`} />
+                  <LikeFillIcon className={`h-6 w-6`} aria-hidden="true" />
                 ) : (
-                  <LikeIcon className={`h-6 w-6`} />
+                  <LikeIcon className={`h-6 w-6`} aria-hidden="true" />
                 )}
               </Button>
             </div>
@@ -92,12 +101,12 @@ export const BookListItemDetail = ({
           <div className="flex-1 flex flex-col items-center justify-center">
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-4">
-                <h1 className="text-title3 text-text-primary">{title}</h1>
+                <h3 className="text-title3 text-text-primary">{title}</h3>
                 <p className="text-body2 text-text-secondary">{author}</p>
               </div>
 
               <div className="flex flex-col justify-center gap-3">
-                <h2 className="text-body2-bold text-text-primary">책 소개</h2>
+                <h4 className="text-body2-bold text-text-primary">책 소개</h4>
                 <p className="text-small text-text-primary whitespace-pre-line leading-[160%]">
                   {description}
                 </p>
@@ -114,9 +123,15 @@ export const BookListItemDetail = ({
           )}
         >
           <div className="flex flex-col gap-2">
-            <Button variant="secondary" onClick={onCollapseDetail}>
+            <Button
+              variant="secondary"
+              aria-label="상세보기 접기"
+              onClick={onCollapseDetail}
+              {...slotProps?.detailButton}
+            >
+              {/* 디자인상으로는 펼친 상태에서도 "상세보기" 문구이지만, 사용성 및 접근성을 위해서는 접기 또는 닫기 문구로 수정해야 함 */}
               상세보기
-              <ChevronUp className="h-4 w-4" />
+              <ChevronUp className="h-4 w-4" aria-hidden="true" />
             </Button>
           </div>
 

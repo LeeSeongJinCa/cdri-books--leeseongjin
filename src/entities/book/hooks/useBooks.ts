@@ -1,27 +1,33 @@
 import type { SearchType } from "@/entities/search/constants/SearchType";
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { bookClient } from "../api/bookClient";
 
+// 10개로 고정, 추후 가져오는 개수도 변경할 수 있게 제공하면 좋음
+const SIZE = 10;
+
 export const useBooks = (searchValue: string, searchType: SearchType) => {
-  const query = useQuery({
-    queryKey: ["books", searchValue, searchType],
-    queryFn: () =>
+  const query = useInfiniteQuery({
+    queryKey: ["books2", searchValue, searchType],
+    queryFn: ({ pageParam = 1 }) =>
       bookClient.search.books({
         queryParams: {
           query: searchValue,
           target: searchType,
-          // TODO: Pagination 추가하기
-          // 현재는 첫 페이지의 10개 아이템만 가져옴
-          page: 1,
-          size: 10,
+          page: pageParam,
+          size: SIZE,
         },
       }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.data.meta.is_end) return undefined;
+      return pages.length + 1;
+    },
   });
 
   const books = useMemo(
-    () => query.data?.data.documents ?? [],
-    [query.data?.data.documents],
+    () => query.data?.pages.flatMap((page) => page.data.documents) ?? [],
+    [query.data?.pages],
   );
 
   return {

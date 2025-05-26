@@ -16,17 +16,25 @@ export const PublicHeader = ({ className, ...props }: PublicHeaderProps) => {
         <Link
           href={ROUTES.HOME}
           className="text-title1 uppercase"
-          activeClassName="border-none"
+          aria-label="홈으로 이동"
         >
           CERTICOS BOOKS
         </Link>
 
-        <nav className="flex items-center space-x-6 text-sm font-medium">
+        <nav
+          aria-label="주요 네비게이션 메뉴"
+          className="flex items-center space-x-6 text-sm font-medium"
+        >
           {PUBLIC_HEADER_ROUTES.map((link) => (
             <Link
               key={link.title}
               href={link.href}
-              className="body-1 text-text-primary transition-colors active:border-b active:border-b-primary"
+              className={cn(
+                "body-1 text-text-primary transition-colors",
+                "border-b border-b-transparent",
+                "active:border-b active:border-b-primary",
+              )}
+              activeClassName="border-b-primary"
             >
               {link.title}
             </Link>
@@ -34,7 +42,7 @@ export const PublicHeader = ({ className, ...props }: PublicHeaderProps) => {
         </nav>
 
         {/* Navigation을 가운데로 위치시키기 위한 빈 블럭 */}
-        <div className="hidden sm:block" />
+        <div className="hidden sm:block" aria-hidden="true" />
       </div>
     </header>
   );

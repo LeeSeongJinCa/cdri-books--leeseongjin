@@ -3,7 +3,7 @@
 import type { BookApiResponseDocument } from "@/entities/book/model/type";
 import { BookListItemDetail } from "@/entities/book/ui/book-list-item-detail/BookListItemDetail";
 import { BookListItem } from "@/entities/book/ui/book-list-item/BookListItem";
-import { memo, useCallback, useState } from "react";
+import { memo, useCallback, useId, useState } from "react";
 
 export interface BookSearchResultListItemProps {
   document: BookApiResponseDocument;
@@ -20,8 +20,14 @@ export const BookSearchResultListItem = memo(
       [],
     );
 
+    const detailButtonId = useId();
+    const detailButtonProps = {
+      "aria-expanded": isExpanded,
+      "aria-controls": detailButtonId,
+    };
     const renderItem = isExpanded ? (
       <BookListItemDetail
+        id={detailButtonId}
         url={document.url}
         cover={document.thumbnail}
         title={document.title}
@@ -30,22 +36,30 @@ export const BookSearchResultListItem = memo(
         originalPrice={document.price}
         discountedPrice={document.sale_price}
         onCollapseDetail={toggleExpanded}
-        //
         isLiked={isLiked}
         onLike={onLike}
+        //
+        slotProps={{
+          detailButton: detailButtonProps,
+        }}
       />
     ) : (
       <BookListItem
+        id={detailButtonId}
         url={document.url}
         cover={document.thumbnail}
         title={document.title}
         author={document.authors.join(", ")}
         price={document.price}
         onExpandDetail={toggleExpanded}
+        //
+        slotProps={{
+          detailButton: detailButtonProps,
+        }}
       />
     );
 
-    return <>{renderItem}</>;
+    return <div data-testid={`book-item-${document.isbn}`}>{renderItem}</div>;
   },
 );
 
