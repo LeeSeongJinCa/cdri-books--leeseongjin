@@ -16,7 +16,6 @@ export const PublicHeader = ({ className, ...props }: PublicHeaderProps) => {
         <Link
           href={ROUTES.HOME}
           className="text-title1 uppercase"
-          activeClassName="border-none"
           aria-label="홈으로 이동"
         >
           CERTICOS BOOKS
@@ -30,7 +29,12 @@ export const PublicHeader = ({ className, ...props }: PublicHeaderProps) => {
             <Link
               key={link.title}
               href={link.href}
-              className="body-1 text-text-primary transition-colors active:border-b active:border-b-primary"
+              className={cn(
+                "body-1 text-text-primary transition-colors",
+                "border-b border-b-transparent",
+                "active:border-b active:border-b-primary",
+              )}
+              activeClassName="border-b-primary"
             >
               {link.title}
             </Link>
