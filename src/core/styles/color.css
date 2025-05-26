@@ -6,8 +6,10 @@
   --color-red: #e84118;
   --color-gray: #dadada;
   --color-light-gray: #f2f4f6;
+  --color-light-gray-100: #d2d6da;
 
   --color-text-primary: #353c49;
   --color-text-secondary: #6d7582;
+  --color-text-title: #1a1e27;
   --color-text-subtitle: #8d94a0;
 }
