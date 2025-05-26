@@ -38,6 +38,7 @@ export const SearchBar = ({
   onDelete,
 }: SearchBarProps) => {
   const [searchValue, setSearchValue] = useState<string>(value ?? "");
+  const [selectedHistoryIndex, setSelectedHistoryIndex] = useState<number>(-1);
 
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
@@ -47,6 +48,15 @@ export const SearchBar = ({
       onChange?.(currentValue, event);
     },
     [onChange],
+  );
+
+  const handleHistoryItemClick = useCallback(
+    (keyword: string) => {
+      setSearchValue(keyword);
+      setSelectedHistoryIndex(-1); // 선택 해제
+      onHistoryClick?.(keyword);
+    },
+    [onHistoryClick],
   );
 
   const handleKeyDown = useCallback(
@@ -59,13 +69,60 @@ export const SearchBar = ({
        */
       if (event.nativeEvent.isComposing) return;
 
-      if (event.key === "Enter" && enableSearchOnEnter) {
-        const currentValue = event.currentTarget.value;
+      const historyLength = history?.length ?? 0;
 
-        onEnter?.(currentValue);
+      switch (event.key) {
+        case "ArrowDown":
+          if (historyLength > 0) {
+            event.preventDefault();
+            setSelectedHistoryIndex((prev) =>
+              prev < historyLength - 1 ? prev + 1 : prev,
+            );
+          }
+          break;
+        case "ArrowUp":
+          if (historyLength > 0) {
+            event.preventDefault();
+            setSelectedHistoryIndex((prev) => (prev > -1 ? prev - 1 : -1));
+          }
+          break;
+        case "Enter": {
+          const isHistoryClick =
+            selectedHistoryIndex >= 0 &&
+            history &&
+            history[selectedHistoryIndex];
+
+          if (isHistoryClick) {
+            // 히스토리 아이템이 선택된 상태에서 Enter
+            event.preventDefault();
+            const selectedKeyword = history[selectedHistoryIndex];
+            handleHistoryItemClick(selectedKeyword);
+          } else if (enableSearchOnEnter) {
+            // 일반 검색
+            const currentValue = event.currentTarget.value;
+            onEnter?.(currentValue);
+          }
+          break;
+        }
+        case "Escape":
+          // 히스토리 선택 해제
+          setSelectedHistoryIndex(-1);
+          break;
+        default:
+          // 다른 키 입력 시 히스토리 선택 해제
+          if (selectedHistoryIndex >= 0) {
+            setSelectedHistoryIndex(-1);
+          }
+          break;
       }
     },
-    [enableSearchOnEnter, onEnter],
+    [
+      enableSearchOnEnter,
+      onEnter,
+      history,
+      selectedHistoryIndex,
+      handleHistoryItemClick,
+    ],
   );
 
   const handleDelete = useCallback(
@@ -77,13 +134,7 @@ export const SearchBar = ({
     [onDelete],
   );
 
-  const handleHistoryItemClick = useCallback(
-    (keyword: string) => {
-      setSearchValue(keyword);
-      onHistoryClick?.(keyword);
-    },
-    [onHistoryClick],
-  );
+  const hasHistory = history && history.length > 0;
 
   return (
     <div
@@ -97,9 +148,7 @@ export const SearchBar = ({
           "SearchBar-inputContainer",
           "group relative",
           "flex flex-col flex-grow w-full",
-          history &&
-            history.length &&
-            "rounded-3xl rounded-bl-none rounded-br-none",
+          hasHistory && "rounded-3xl rounded-bl-none rounded-br-none",
         )}
       >
         <label
@@ -109,8 +158,7 @@ export const SearchBar = ({
             "relative flex flex-grow gap-2.5 p-2.5 bg-light-gray",
             "border border-gray-300 rounded-3xl",
             "group-focus-within:ring-0 group-focus-within:border-blue-500 group-focus-within:outline-none",
-            history &&
-              history.length > 0 &&
+            hasHistory &&
               "group-focus-within:rounded-t-3xl group-focus-within:rounded-b-none group-focus-within:border-b-0 group-focus-within:border-b-transparent",
           )}
         >
@@ -123,6 +171,16 @@ export const SearchBar = ({
             type="text"
             placeholder={placeholder}
             autoComplete="off"
+            role="combobox"
+            aria-expanded={hasHistory}
+            aria-controls="search-history-list"
+            aria-activedescendant={
+              hasHistory &&
+              selectedHistoryIndex >= 0 &&
+              history[selectedHistoryIndex]
+                ? `history-item-${selectedHistoryIndex}`
+                : undefined
+            }
             className={cn(
               "SearchBar-input",
               "w-full p-0 text-caption text-text-primary placeholder-text-subtitle bg-transparent border-0 outline-none shadow-none focus-within:ring-0",
@@ -130,10 +188,17 @@ export const SearchBar = ({
             value={value ?? searchValue}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
+            onBlur={() => {
+              // 포커스를 잃을 때 히스토리 선택 해제 (약간의 지연을 두어 클릭 이벤트가 먼저 처리되도록)
+              setTimeout(() => setSelectedHistoryIndex(-1), 150);
+            }}
           />
         </label>
-        {history && history.length > 0 && (
+        {hasHistory && (
           <ul
+            id="search-history-list"
+            role="listbox"
+            aria-label="검색 기록"
             className={cn(
               "SearchBar-history-list",
               "absolute top-full left-0 right-0 z-20",
@@ -143,7 +208,10 @@ export const SearchBar = ({
           >
             {history.map((keyword, index) => (
               <li
-                key={`${keyword}-${index}`}
+                key={keyword}
+                id={`history-item-${index}`}
+                role="option"
+                aria-selected={selectedHistoryIndex === index}
                 className={cn(
                   "SearchBar-history-item",
                   "flex items-center justify-between text-text-subtitle",
@@ -154,9 +222,11 @@ export const SearchBar = ({
                   className={cn(
                     "flex-grow flex items-center justify-between py-1.5 px-2.5 rounded text-left cursor-pointer",
                     "hover:bg-gray-200 focus:outline-none focus:ring-1 focus:ring-blue-500",
+                    selectedHistoryIndex === index &&
+                      "bg-blue-100 text-blue-900",
                   )}
-                  aria-label={`최근 검색어 ${keyword}를 다시 검색`}
                   onClick={() => handleHistoryItemClick(keyword)}
+                  aria-label={`최근 검색어 ${keyword}를 다시 검색`}
                 >
                   <span className="text-text-primary">{keyword}</span>
                 </button>
